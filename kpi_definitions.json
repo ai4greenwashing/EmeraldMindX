@@ -1,0 +1,200 @@
+[
+  {
+    "id": "ESG 1‑1",
+    "name": "Energy consumption, total",
+    "definition": "Total amount of energy consumed by the organisation during the reporting period (Scope 1 + Scope 2).",
+    "sector": [      "Industrial Transportation",
+      "Banks",
+      "Nonlife Insurance",
+      "Automobiles",
+      "Electricity Utilities",
+      "None of the listed"
+    ]
+  },
+  {
+    "id": "ESG 1‑2",
+    "name": "Energy consumption intensity",
+    "definition": "Energy consumed per unit of activity (options: per unit of revenue, per employee, per unit of production volume).",
+    "sector": [      "Industrial Transportation",
+      "Banks",
+      "Nonlife Insurance",
+      "Automobiles",
+      "Electricity Utilities",
+      "None of the listed"
+    ]
+  },
+  {
+    "id": "ESG 2‑1",
+    "name": "GHG emissions, total",
+    "definition": "Total Scope 1 + Scope 2 greenhouse‑gas emissions during the reporting period.",
+    "sector": [      "Industrial Transportation",
+      "Banks",
+      "Nonlife Insurance",
+      "Automobiles",
+      "Electricity Utilities",
+      "None of the listed"
+    ]
+  },
+  {
+    "id": "ESG 2‑2",
+    "name": "GHG emissions intensity",
+    "definition": "GHG emissions per unit of activity (options: per unit of revenue, per employee, per unit of production volume).",
+    "sector": [      "Industrial Transportation",
+      "Banks",
+      "Nonlife Insurance",
+      "Automobiles",
+      "Electricity Utilities",
+      "None of the listed"
+    ]
+  },
+  {
+    "id": "ESG 10‑1",
+    "name": "% of energy from renewable sources",
+    "definition": "Share of total energy consumed that originates from renewable energy sources.",
+    "sector": [
+      "Industrial Transportation",
+      "Banks",
+      "Nonlife Insurance",
+      "Automobiles",
+      "Electricity Utilities"
+    ]
+  },
+  {
+    "id": "ESG 10‑2",
+    "name": "% of energy from combined heat and power (CHP)",
+    "definition": "Share of total energy consumed that is generated through combined heat and power plants.",
+    "sector": [
+      "Industrial Transportation",
+      "Banks",
+      "Nonlife Insurance",
+      "Automobiles",
+      "Electricity Utilities"
+    ]
+  },
+  {
+    "id": "ESG 10‑3",
+    "name": "Investments in renewable energy generation as % of total investments",
+    "definition": "Share of total investments that are directed to renewable‑energy generation projects.",
+    "sector": ["Electricity Utilities"]
+  },
+  {
+    "id": "ESG 11",
+    "name": "NOx / SOx emissions (total)",
+    "definition": "Total nitrogen‑oxide (NOx) and sulphur‑oxide (SOx) emissions from operations.",
+    "sector": ["Industrial Transportation, Electricity Utilities, Automobiles"]
+  },
+  {
+    "id": "ESG 11‑1",
+    "name": "NOx / SOx emissions – electricity utilities total",
+    "definition": "Total NOx and SOx emissions from electricity‑generation activities.",
+    "sector": ["Electricity Utilities"]
+  },
+  {
+    "id": "ESG 11‑2",
+    "name": "NOx / SOx emissions – coal‑fired generation portfolio",
+    "definition": "NOx and SOx emissions attributable to coal‑fired generation within the portfolio.",
+    "sector": ["Electricity Utilities"]
+  },
+  {
+    "id": "ESG 11‑3",
+    "name": "NOx / SOx emissions per kWh produced",
+    "definition": "NOx and SOx emissions normalised by electricity output.",
+    "sector": ["Electricity Utilities"]
+  },
+  {
+    "id": "ESG 11‑4",
+    "name": "NOx / SOx emissions by passenger‑kilometre",
+    "definition": "NOx and SOx emissions per passenger‑kilometre transported.",
+    "sector": ["Industrial Transportation"]
+  },
+  {
+    "id": "ESG 11‑5",
+    "name": "NOx / SOx emissions by passenger‑mile",
+    "definition": "NOx and SOx emissions per passenger‑mile transported.",
+    "sector": ["Industrial Transportation"]
+  },
+  {
+    "id": "ESG 11‑6",
+    "name": "NOx / SOx emissions by cargo‑kilometre",
+    "definition": "NOx and SOx emissions per cargo‑kilometre transported.",
+    "sector": ["Industrial Transportation"]
+  },
+  {
+    "id": "ESG 11‑7",
+    "name": "NOx / SOx emissions by cargo‑mile",
+    "definition": "NOx and SOx emissions per cargo‑mile transported.",
+    "sector": ["Industrial Transportation"]
+  },
+  {
+    "id": "ESG 11‑8",
+    "name": "NOx / SOx emissions – total production sites",
+    "definition": "Total NOx and SOx emissions from all automobile production sites.",
+    "sector": ["Automobiles"]
+  },
+  {
+    "id": "ESG 12",
+    "name": "Waste generated (total)",
+    "definition": "Total waste generated during the reporting period.",
+    "sector": ["Industrial Transportation", "Automobiles", "Banks"]
+  },
+  {
+    "id": "ESG 12‑1",
+    "name": "Waste per unit produced",
+    "definition": "Waste generated per unit of product or output.",
+    "sector": ["Industrial Transportation", "Automobiles", "Banks"]
+  },
+  {
+    "id": "ESG 12‑2",
+    "name": "% of waste recycled",
+    "definition": "Proportion of total generated waste that is recycled.",
+    "sector": ["Automobiles", "Banks"]
+  },
+  {
+    "id": "ESG 13",
+    "name": "Environmental compatibility (overall)",
+    "definition": "Composite indicator covering multiple environmental‑compatibility aspects relevant to the sector.",
+    "sector": ["Automobiles", "Electricity Utilities"]
+  },
+  {
+    "id": "ESG 13‑1",
+    "name": "Average fuel consumption of sold car fleet",
+    "definition": "Fleet‑weighted average fuel consumption for all vehicles sold in the reporting year.",
+    "sector": ["Automobiles"]
+  },
+  {
+    "id": "ESG 13‑2",
+    "name": "Percentage of ISO 14001‑certified sites",
+    "definition": "Share of production or corporate sites certified to ISO 14001 environmental‑management standard.",
+    "sector": ["Automobiles"]
+  },
+  {
+    "id": "ESG 13‑3",
+    "name": "% of renewable energy produced",
+    "definition": "Share of total electricity produced that originates from renewable sources.",
+    "sector": ["Electricity Utilities"]
+  },
+  {
+    "id": "ESG 13‑4",
+    "name": "Total renewable energy produced – biomass",
+    "definition": "Total electricity generated from biomass‑based renewable sources.",
+    "sector": ["Electricity Utilities"]
+  },
+  {
+    "id": "ESG 13‑5",
+    "name": "Total renewable energy produced – wind",
+    "definition": "Total electricity generated from wind‑based renewable sources.",
+    "sector": ["Electricity Utilities"]
+  },
+  {
+    "id": "ESG 13‑6",
+    "name": "Total renewable energy produced – hydro",
+    "definition": "Total electricity generated from hydro‑based renewable sources.",
+    "sector": ["Electricity Utilities"]
+  },
+  {
+    "id": "ESG 13‑7",
+    "name": "Percentage of revenues from eco‑labelled products",
+    "definition": "Share of total revenues generated from products or services that carry recognised eco‑labels.",
+    "sector": ["Electricity Utilities"]
+  }
+]

@@ -1,0 +1,665 @@
+
+{
+  "nodes": [
+    {
+      "class": "Organization",
+      "properties": [
+        "name",
+        "industry",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "Person",
+      "properties": [
+        "name",
+        "role",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "Facility",
+      "properties": [
+        "name",
+        "type",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "Product",
+      "properties": [
+        "name",
+        "description",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "Material",
+      "properties": [
+        "name",
+        "category",
+        "source",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "Emission",
+      "properties": [
+        "category",
+        "scope",
+        "amount",
+        "unit",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["category", "scope", "valid_from"]
+    },
+    {
+      "class": "Waste",
+      "properties": [
+        "category",
+        "amount",
+        "destination",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["category", "valid_from"]
+    },
+    {
+      "class": "KPIObservation",
+      "properties": [
+        "kpi_type",
+        "title",
+        "value",
+        "unit",
+        "kind",
+        "direction",
+        "year",
+        "target_year",
+        "baseline_year",
+        "source_id",
+        "company",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["kpi_type", "source_id", "year", "target_year", "baseline_year"]
+    },
+    {
+      "class": "Standard",
+      "properties": [
+        "name",
+        "description",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name", "valid_from"]
+    },
+    {
+      "class": "Certification",
+      "properties": [
+        "name",
+        "description",
+        "validity_period",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name", "valid_from", "validity_period"]
+    },
+    {
+      "class": "Regulation",
+      "properties": [
+        "name",
+        "jurisdiction",
+        "description",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name", "jurisdiction"]
+    },
+    {
+      "class": "Initiative",
+      "properties": [
+        "name",
+        "description",
+        "sponsor",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "Goal",
+      "properties": [
+        "name",
+        "description",
+        "target_date",
+        "metric",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "SustainabilityClaim",
+      "properties": [
+        "claim_id",
+        "description",
+        "date",
+        "source",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["claim_id"]
+    },
+    {
+      "class": "ThirdPartyVerification",
+      "properties": [
+        "verification_id",
+        "verifier",
+        "date",
+        "result",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["verification_id"]
+    },
+    {
+      "class": "CarbonOffsetProject",
+      "properties": [
+        "project_id",
+        "name",
+        "type",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["project_id"]
+    },
+    {
+      "class": "ScienceBasedTarget",
+      "properties": [
+        "target_id",
+        "description",
+        "target_year",
+        "baseline_year",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["target_id"]
+    },
+    {
+      "class": "Controversy",
+      "properties": [
+        "controversy_id",
+        "description",
+        "date",
+        "source",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["controversy_id"]
+    },
+    {
+      "class": "Penalty",
+      "properties": [
+        "penalty_id",
+        "description",
+        "amount",
+        "date",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["penalty_id"]
+    },
+    {
+      "class": "MediaReport",
+      "properties": [
+        "report_id",
+        "title",
+        "publisher",
+        "date",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["report_id"]
+    },
+    {
+      "class": "Community",
+      "properties": [
+        "name",
+        "description",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "Location",
+      "properties": [
+        "name",
+        "region",
+        "country",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name", "country"]
+    },
+    {
+      "class": "Authority",
+      "properties": [
+        "name",
+        "type",
+        "jurisdiction",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name", "jurisdiction"]
+    },
+    {
+      "class": "Country",
+      "properties": [
+        "name",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "ClaimKeyword",
+      "properties": [
+        "term",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["term"]
+    },
+    {
+      "class": "Investment",
+      "properties": [
+        "amount",
+        "currency",
+        "date",
+        "investor",
+        "investee",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["investor", "investee", "date"]
+    },
+    {
+      "class": "Project",
+      "properties": [
+        "name",
+        "description",
+        "status",
+        "start_date",
+        "end_date",
+        "valid_from",
+        "valid_to",
+        "is_current"
+      ],
+      "identity_keys": ["name"]
+    }
+  ],
+  "edges": [
+    {
+      "label": "usesMaterial",
+      "source_class": "Product",
+      "target_class": "Material",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "generatesEmission",
+      "source_class": "Facility",
+      "target_class": "Emission",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "generatesEmission",
+      "source_class": "Organization",
+      "target_class": "Emission",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "generatesWaste",
+      "source_class": "Facility",
+      "target_class": "Waste",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "impactsCommunity",
+      "source_class": "Organization",
+      "target_class": "Community",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "adoptsStandard",
+      "source_class": "Organization",
+      "target_class": "Standard",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "holdsCertification",
+      "source_class": "Organization",
+      "target_class": "Certification",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "holdsCertification",
+      "source_class": "Facility",
+      "target_class": "Certification",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "subjectToRegulation",
+      "source_class": "Organization",
+      "target_class": "Regulation",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "takesPartIn",
+      "source_class": "Organization",
+      "target_class": "Initiative",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "setsGoal",
+      "source_class": "Organization",
+      "target_class": "Goal",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "partOf",
+      "source_class": "Facility",
+      "target_class": "Organization",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "reducesEmission",
+      "source_class": "Initiative",
+      "target_class": "Emission",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "reducesWaste",
+      "source_class": "Initiative",
+      "target_class": "Waste",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "aimsForCertification",
+      "source_class": "Initiative",
+      "target_class": "Certification",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "reportsKPI",
+      "source_class": "Organization",
+      "target_class": "KPIObservation",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "observedAtFacility",
+      "source_class": "KPIObservation",
+      "target_class": "Facility",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "claims",
+      "source_class": "Organization",
+      "target_class": "SustainabilityClaim",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "verifiedBy",
+      "source_class": "SustainabilityClaim",
+      "target_class": "ThirdPartyVerification",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "verifiedBy",
+      "source_class": "SustainabilityClaim",
+      "target_class": "KPIObservation",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "contradictedBy",
+      "source_class": "SustainabilityClaim",
+      "target_class": "Controversy",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "contradictedByMedia",
+      "source_class": "SustainabilityClaim",
+      "target_class": "MediaReport",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "subjectToPenalty",
+      "source_class": "Organization",
+      "target_class": "Penalty",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "offsetsWith",
+      "source_class": "Organization",
+      "target_class": "CarbonOffsetProject",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "targetsScienceBased",
+      "source_class": "Organization",
+      "target_class": "ScienceBasedTarget",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "manufacturedAt",
+      "source_class": "Product",
+      "target_class": "Facility",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "producedBy",
+      "source_class": "Product",
+      "target_class": "Organization",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "suppliedBy",
+      "source_class": "Product",
+      "target_class": "Organization",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "ownsFacility",
+      "source_class": "Organization",
+      "target_class": "Facility",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "publishesReport",
+      "source_class": "Organization",
+      "target_class": "MediaReport",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "locatedIn",
+      "source_class": "Organization",
+      "target_class": "Location",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "locatedIn",
+      "source_class": "Facility",
+      "target_class": "Location",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "locatedIn",
+      "source_class": "CarbonOffsetProject",
+      "target_class": "Location",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "locatedIn",
+      "source_class": "Community",
+      "target_class": "Location",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "enforcedBy",
+      "source_class": "Penalty",
+      "target_class": "Authority",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "issuedBy",
+      "source_class": "Certification",
+      "target_class": "Authority",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "issuedBy",
+      "source_class": "Standard",
+      "target_class": "Authority",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "isIn",
+      "source_class": "Location",
+      "target_class": "Country",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "reportedBy",
+      "source_class": "MediaReport",
+      "target_class": "Person",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "mentionsOrganization",
+      "source_class": "MediaReport",
+      "target_class": "Organization",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "mentionsProduct",
+      "source_class": "MediaReport",
+      "target_class": "Product",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "involvedIn",
+      "source_class": "Person",
+      "target_class": "Product",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "involvedIn",
+      "source_class": "Person",
+      "target_class": "CarbonOffsetProject",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "worksAt",
+      "source_class": "Person",
+      "target_class": "Organization",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "hasKeyword",
+      "source_class": "SustainabilityClaim",
+      "target_class": "ClaimKeyword",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "owns",
+      "source_class": "Organization",
+      "target_class": "Organization",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "partnersWith",
+      "source_class": "Organization",
+      "target_class": "Organization",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "investsIn",
+      "source_class": "Organization",
+      "target_class": "Investment",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "investedIn",
+      "source_class": "Investment",
+      "target_class": "Project",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "locatedIn",
+      "source_class": "Project",
+      "target_class": "Location",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "sourcedFrom",
+      "source_class": "Material",
+      "target_class": "Organization",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "sourcedFrom",
+      "source_class": "Material",
+      "target_class": "Location",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "ownedBy",
+      "source_class": "Project",
+      "target_class": "Organization",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    },
+    {
+      "label": "involvedIn",
+      "source_class": "Person",
+      "target_class": "Project",
+      "temporal_properties": ["valid_from", "valid_to", "recorded_at"]
+    }
+  ]
+}

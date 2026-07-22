@@ -1,0 +1,13 @@
+.env
+EmeraldDB/chromadb/
+*DS_Store
+.DS_Store
+._*
+.ipynb_checkpoints
+.python-version
+.venv
+.myenv
+venv/
+myenv/
+ENV/
+._.DS_Store

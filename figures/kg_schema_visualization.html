@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESG Knowledge Graph Schema</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+        }
+        
+        #container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        h1 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 24px;
+        }
+        
+        .controls {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        #graph {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fafafa;
+        }
+        
+        .node {
+            cursor: pointer;
+            stroke: white;
+            stroke-width: 2px;
+        }
+        
+        .node:hover {
+            stroke: #333;
+            stroke-width: 3px;
+        }
+        
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.6;
+            fill: none;
+        }
+        
+        .link-label {
+            font-size: 10px;
+            fill: #666;
+            pointer-events: none;
+        }
+        
+        .node-label {
+            font-size: 12px;
+            font-weight: 500;
+            pointer-events: none;
+            text-anchor: middle;
+        }
+        
+        .tooltip {
+            position: absolute;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            max-width: 300px;
+        }
+        
+        .legend {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .legend-item {
+            display: inline-block;
+            margin-right: 15px;
+            margin-bottom: 5px;
+        }
+        
+        .legend-color {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>ESG Knowledge Graph Schema</h1>
+        <div class="controls">
+            <button onclick="restartSimulation()">Reset Layout</button>
+            <button onclick="toggleLabels()">Toggle Labels</button>
+            <button onclick="toggleEdgeLabels()">Toggle Edge Labels</button>
+        </div>
+        <svg id="graph"></svg>
+        <div class="legend" id="legend"></div>
+    </div>
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        const schema = {
+  "nodes": [
+    {
+      "class": "Organization",
+      "properties": [
+        "name",
+        "industry"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "Person",
+      "properties": [
+        "name",
+        "role"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "Facility",
+      "properties": [
+        "name",
+        "type"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "Product",
+      "properties": [
+        "name",
+        "description"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "Material",
+      "properties": [
+        "name",
+        "category",
+        "source"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "Emission",
+      "properties": [
+        "category",
+        "scope",
+        "amount",
+        "unit"
+      ],
+      "identity_keys": ["category", "scope", "valid_from"]
+    },
+    {
+      "class": "Waste",
+      "properties": [
+        "category",
+        "amount",
+        "destination"
+      ],
+      "identity_keys": ["category", "valid_from"]
+    },
+    {
+      "class": "KPIObservation",
+      "properties": [
+        "kpi_type",
+        "title",
+        "value",
+        "unit",
+        "kind",
+        "direction",
+        "year",
+        "target_year",
+        "baseline_year",
+        "source_id",
+        "company"
+      ],
+      "identity_keys": ["kpi_type", "source_id", "year", "target_year", "baseline_year"]
+    },
+    {
+      "class": "Standard",
+      "properties": [
+        "name",
+        "description"
+      ],
+      "identity_keys": ["name", "valid_from"]
+    },
+    {
+      "class": "Certification",
+      "properties": [
+        "name",
+        "description",
+        "validity_period"
+      ],
+      "identity_keys": ["name", "valid_from", "validity_period"]
+    },
+    {
+      "class": "Regulation",
+      "properties": [
+        "name",
+        "jurisdiction",
+        "description"
+      ],
+      "identity_keys": ["name", "jurisdiction"]
+    },
+    {
+      "class": "Initiative",
+      "properties": [
+        "name",
+        "description",
+        "sponsor"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "Goal",
+      "properties": [
+        "name",
+        "description",
+        "target_date",
+        "metric"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "SustainabilityClaim",
+      "properties": [
+        "claim_id",
+        "description",
+        "date",
+        "source"
+      ],
+      "identity_keys": ["claim_id"]
+    },
+    {
+      "class": "ThirdPartyVerification",
+      "properties": [
+        "verification_id",
+        "verifier",
+        "date",
+        "result"
+      ],
+      "identity_keys": ["verification_id"]
+    },
+    {
+      "class": "CarbonOffsetProject",
+      "properties": [
+        "project_id",
+        "name",
+        "type"
+      ],
+      "identity_keys": ["project_id"]
+    },
+    {
+      "class": "ScienceBasedTarget",
+      "properties": [
+        "target_id",
+        "description",
+        "target_year",
+        "baseline_year"
+      ],
+      "identity_keys": ["target_id"]
+    },
+    {
+      "class": "Controversy",
+      "properties": [
+        "controversy_id",
+        "description",
+        "date",
+        "source"
+      ],
+      "identity_keys": ["controversy_id"]
+    },
+    {
+      "class": "Penalty",
+      "properties": [
+        "penalty_id",
+        "description",
+        "amount",
+        "date"
+      ],
+      "identity_keys": ["penalty_id"]
+    },
+    {
+      "class": "MediaReport",
+      "properties": [
+        "report_id",
+        "title",
+        "publisher",
+        "date"
+      ],
+      "identity_keys": ["report_id"]
+    },
+    {
+      "class": "Community",
+      "properties": [
+        "name",
+        "description"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "Location",
+      "properties": [
+        "name",
+        "region",
+        "country"
+      ],
+      "identity_keys": ["name", "country"]
+    },
+    {
+      "class": "Authority",
+      "properties": [
+        "name",
+        "type",
+        "jurisdiction"
+      ],
+      "identity_keys": ["name", "jurisdiction"]
+    },
+    {
+      "class": "Country",
+      "properties": [
+        "name"
+      ],
+      "identity_keys": ["name"]
+    },
+    {
+      "class": "ClaimKeyword",
+      "properties": [
+        "term"
+      ],
+      "identity_keys": ["term"]
+    },
+    {
+      "class": "Investment",
+      "properties": [
+        "amount",
+        "currency",
+        "date",
+        "investor",
+        "investee"
+      ],
+      "identity_keys": ["investor", "investee", "date"]
+    },
+    {
+      "class": "Project",
+      "properties": [
+        "name",
+        "description",
+        "status",
+        "start_date",
+        "end_date"
+      ],
+      "identity_keys": ["name"]
+    }
+  ],
+  "edges": [
+    {
+      "label": "usesMaterial",
+      "source_class": "Product",
+      "target_class": "Material"
+    },
+    {
+      "label": "generatesEmission",
+      "source_class": "Facility",
+      "target_class": "Emission"
+    },
+    {
+      "label": "generatesEmission",
+      "source_class": "Organization",
+      "target_class": "Emission"
+    },
+    {
+      "label": "generatesWaste",
+      "source_class": "Facility",
+      "target_class": "Waste"
+    },
+    {
+      "label": "impactsCommunity",
+      "source_class": "Organization",
+      "target_class": "Community"
+    },
+    {
+      "label": "adoptsStandard",
+      "source_class": "Organization",
+      "target_class": "Standard"
+    },
+    {
+      "label": "holdsCertification",
+      "source_class": "Organization",
+      "target_class": "Certification"
+    },
+    {
+      "label": "holdsCertification",
+      "source_class": "Facility",
+      "target_class": "Certification"
+    },
+    {
+      "label": "subjectToRegulation",
+      "source_class": "Organization",
+      "target_class": "Regulation"
+    },
+    {
+      "label": "takesPartIn",
+      "source_class": "Organization",
+      "target_class": "Initiative"
+    },
+    {
+      "label": "setsGoal",
+      "source_class": "Organization",
+      "target_class": "Goal"
+    },
+    {
+      "label": "partOf",
+      "source_class": "Facility",
+      "target_class": "Organization"
+    },
+    {
+      "label": "reducesEmission",
+      "source_class": "Initiative",
+      "target_class": "Emission"
+    },
+    {
+      "label": "reducesWaste",
+      "source_class": "Initiative",
+      "target_class": "Waste"
+    },
+    {
+      "label": "aimsForCertification",
+      "source_class": "Initiative",
+      "target_class": "Certification"
+    },
+    {
+      "label": "reportsKPI",
+      "source_class": "Organization",
+      "target_class": "KPIObservation"
+    },
+    {
+      "label": "observedAtFacility",
+      "source_class": "KPIObservation",
+      "target_class": "Facility"
+    },
+    {
+      "label": "claims",
+      "source_class": "Organization",
+      "target_class": "SustainabilityClaim"
+    },
+    {
+      "label": "verifiedBy",
+      "source_class": "SustainabilityClaim",
+      "target_class": "ThirdPartyVerification"
+    },
+    {
+      "label": "verifiedBy",
+      "source_class": "SustainabilityClaim",
+      "target_class": "KPIObservation"
+    },
+    {
+      "label": "contradictedBy",
+      "source_class": "SustainabilityClaim",
+      "target_class": "Controversy"
+    },
+    {
+      "label": "contradictedByMedia",
+      "source_class": "SustainabilityClaim",
+      "target_class": "MediaReport"
+    },
+    {
+      "label": "subjectToPenalty",
+      "source_class": "Organization",
+      "target_class": "Penalty"
+    },
+    {
+      "label": "offsetsWith",
+      "source_class": "Organization",
+      "target_class": "CarbonOffsetProject"
+    },
+    {
+      "label": "targetsScienceBased",
+      "source_class": "Organization",
+      "target_class": "ScienceBasedTarget"
+    },
+    {
+      "label": "manufacturedAt",
+      "source_class": "Product",
+      "target_class": "Facility"
+    },
+    {
+      "label": "producedBy",
+      "source_class": "Product",
+      "target_class": "Organization"
+    },
+    {
+      "label": "suppliedBy",
+      "source_class": "Product",
+      "target_class": "Organization"
+    },
+    {
+      "label": "ownsFacility",
+      "source_class": "Organization",
+      "target_class": "Facility"
+    },
+    {
+      "label": "publishesReport",
+      "source_class": "Organization",
+      "target_class": "MediaReport"
+    },
+    {
+      "label": "locatedIn",
+      "source_class": "Organization",
+      "target_class": "Location"
+    },
+    {
+      "label": "locatedIn",
+      "source_class": "Facility",
+      "target_class": "Location"
+    },
+    {
+      "label": "locatedIn",
+      "source_class": "CarbonOffsetProject",
+      "target_class": "Location"
+    },
+    {
+      "label": "locatedIn",
+      "source_class": "Community",
+      "target_class": "Location"
+    },
+    {
+      "label": "enforcedBy",
+      "source_class": "Penalty",
+      "target_class": "Authority"
+    },
+    {
+      "label": "issuedBy",
+      "source_class": "Certification",
+      "target_class": "Authority"
+    },
+    {
+      "label": "issuedBy",
+      "source_class": "Standard",
+      "target_class": "Authority"
+    },
+    {
+      "label": "isIn",
+      "source_class": "Location",
+      "target_class": "Country"
+    },
+    {
+      "label": "reportedBy",
+      "source_class": "MediaReport",
+      "target_class": "Person"
+    },
+    {
+      "label": "mentionsOrganization",
+      "source_class": "MediaReport",
+      "target_class": "Organization"
+    },
+    {
+      "label": "mentionsProduct",
+      "source_class": "MediaReport",
+      "target_class": "Product"
+    },
+    {
+      "label": "involvedIn",
+      "source_class": "Person",
+      "target_class": "Product"
+    },
+    {
+      "label": "involvedIn",
+      "source_class": "Person",
+      "target_class": "CarbonOffsetProject"
+    },
+    {
+      "label": "worksAt",
+      "source_class": "Person",
+      "target_class": "Organization"
+    },
+    {
+      "label": "hasKeyword",
+      "source_class": "SustainabilityClaim",
+      "target_class": "ClaimKeyword"
+    },
+    {
+      "label": "owns",
+      "source_class": "Organization",
+      "target_class": "Organization"
+    },
+    {
+      "label": "partnersWith",
+      "source_class": "Organization",
+      "target_class": "Organization"
+    },
+    {
+      "label": "investsIn",
+      "source_class": "Organization",
+      "target_class": "Investment"
+    },
+    {
+      "label": "investedIn",
+      "source_class": "Investment",
+      "target_class": "Project"
+    },
+    {
+      "label": "locatedIn",
+      "source_class": "Project",
+      "target_class": "Location"
+    },
+    {
+      "label": "sourcedFrom",
+      "source_class": "Material",
+      "target_class": "Organization"
+    },
+    {
+      "label": "sourcedFrom",
+      "source_class": "Material",
+      "target_class": "Location"
+    },
+    {
+      "label": "ownedBy",
+      "source_class": "Project",
+      "target_class": "Organization"
+    },
+    {
+      "label": "involvedIn",
+      "source_class": "Person",
+      "target_class": "Project"
+    }
+  ]
+};
+
+        // Node categories for coloring
+        const categories = {
+            'Core': ['Organization', 'Person', 'Facility', 'Product'],
+            'Environmental': ['Emission', 'Waste', 'Material', 'CarbonOffsetProject'],
+            'Compliance': ['Standard', 'Certification', 'Regulation', 'Authority'],
+            'Performance': ['KPIObservation', 'Goal', 'Initiative', 'ScienceBasedTarget'],
+            'Claims': ['SustainabilityClaim', 'ThirdPartyVerification', 'ClaimKeyword'],
+            'Risk': ['Controversy', 'Penalty', 'MediaReport'],
+            'Location': ['Location', 'Country', 'Community'],
+            'Finance': ['Investment', 'Project']
+        };
+
+        const colorScale = {
+            'Core': '#3498db',
+            'Environmental': '#27ae60',
+            'Compliance': '#9b59b6',
+            'Performance': '#f39c12',
+            'Claims': '#e74c3c',
+            'Risk': '#c0392b',
+            'Location': '#16a085',
+            'Finance': '#34495e'
+        };
+
+        function getNodeCategory(nodeClass) {
+            for (const [category, classes] of Object.entries(categories)) {
+                if (classes.includes(nodeClass)) return category;
+            }
+            return 'Other';
+        }
+
+        // Prepare graph data
+        const nodes = schema.nodes.map(n => ({
+            id: n.class,
+            label: n.class,
+            properties: n.properties,
+            identity_keys: n.identity_keys,
+            category: getNodeCategory(n.class),
+            color: colorScale[getNodeCategory(n.class)] || '#95a5a6'
+        }));
+
+        const links = schema.edges.map(e => ({
+            source: e.source_class,
+            target: e.target_class,
+            label: e.label
+        }));
+
+        // SVG setup
+        const width = 1400;
+        const height = 900;
+        const svg = d3.select("#graph")
+            .attr("width", width)
+            .attr("height", height);
+
+        const g = svg.append("g");
+
+        // Zoom behavior
+        const zoom = d3.zoom()
+            .scaleExtent([0.1, 4])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+
+        svg.call(zoom);
+
+        // Create legend
+        const legendContainer = d3.select("#legend");
+        Object.entries(colorScale).forEach(([category, color]) => {
+            legendContainer.append("div")
+                .attr("class", "legend-item")
+                .html(`<span class="legend-color" style="background: ${color}"></span>${category}`);
+        });
+
+        // Force simulation
+        const simulation = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links).id(d => d.id).distance(120))
+            .force("charge", d3.forceManyBody().strength(-400))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(40));
+
+        // Links
+        const link = g.append("g")
+            .selectAll("path")
+            .data(links)
+            .enter()
+            .append("path")
+            .attr("class", "link")
+            .attr("marker-end", "url(#arrowhead)");
+
+        // Arrow markers
+        svg.append("defs").append("marker")
+            .attr("id", "arrowhead")
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", 25)
+            .attr("refY", 0)
+            .attr("markerWidth", 6)
+            .attr("markerHeight", 6)
+            .attr("orient", "auto")
+            .append("path")
+            .attr("d", "M0,-5L10,0L0,5")
+            .attr("fill", "#999");
+
+        // Link labels
+        const linkLabel = g.append("g")
+            .selectAll("text")
+            .data(links)
+            .enter()
+            .append("text")
+            .attr("class", "link-label")
+            .text(d => d.label)
+            .style("display", "none");
+
+        // Nodes
+        const node = g.append("g")
+            .selectAll("circle")
+            .data(nodes)
+            .enter()
+            .append("circle")
+            .attr("class", "node")
+            .attr("r", d => d.id === 'Organization' ? 20 : 15)
+            .attr("fill", d => d.color)
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended))
+            .on("mouseover", showTooltip)
+            .on("mouseout", hideTooltip);
+
+        // Node labels
+        const nodeLabel = g.append("g")
+            .selectAll("text")
+            .data(nodes)
+            .enter()
+            .append("text")
+            .attr("class", "node-label")
+            .attr("dy", 30)
+            .text(d => d.label);
+
+        // Simulation tick
+        simulation.on("tick", () => {
+            link.attr("d", d => {
+                const dx = d.target.x - d.source.x;
+                const dy = d.target.y - d.source.y;
+                const dr = Math.sqrt(dx * dx + dy * dy);
+                return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`;
+            });
+
+            linkLabel
+                .attr("x", d => (d.source.x + d.target.x) / 2)
+                .attr("y", d => (d.source.y + d.target.y) / 2);
+
+            node
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y);
+
+            nodeLabel
+                .attr("x", d => d.x)
+                .attr("y", d => d.y);
+        });
+
+        // Drag functions
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        // Tooltip
+        const tooltip = d3.select("#tooltip");
+
+        function showTooltip(event, d) {
+            tooltip
+                .style("opacity", 1)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 10) + "px")
+                .html(`
+                    <strong>${d.label}</strong><br>
+                    <strong>Category:</strong> ${d.category}<br>
+                    <strong>Properties:</strong> ${d.properties.join(', ')}<br>
+                    <strong>Identity Keys:</strong> ${d.identity_keys.join(', ')}
+                `);
+        }
+
+        function hideTooltip() {
+            tooltip.style("opacity", 0);
+        }
+
+        // Control functions
+        let labelsVisible = true;
+        let edgeLabelsVisible = false;
+
+        function restartSimulation() {
+            simulation.alpha(1).restart();
+        }
+
+        function toggleLabels() {
+            labelsVisible = !labelsVisible;
+            nodeLabel.style("display", labelsVisible ? "block" : "none");
+        }
+
+        function toggleEdgeLabels() {
+            edgeLabelsVisible = !edgeLabelsVisible;
+            linkLabel.style("display", edgeLabelsVisible ? "block" : "none");
+        }
+    </script>
+</body>
+</html>
