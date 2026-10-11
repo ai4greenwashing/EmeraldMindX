@@ -11,3 +11,4 @@ venv/
 myenv/
 ENV/
 ._.DS_Store
+__pycache__/
