@@ -6,7 +6,7 @@ Implements Algorithm 1 ("Context Retrieval via Guided Beam Search") of the
 EmeraldMindX paper:
 
   Entry       Resolve the company via (Anchor)-[:REPRESENTS]->(Organization);
-              fall back to the four-tier ``get_company_id`` matcher.
+              fall back to the four-tier ``CompanyMatcher``.
   Phase 1     Personalized PageRank from the Organization node(s) gives the
               top-``ppr`` candidates V_ppr. A weighted beam search then expands
               paths over undirected edges for up to ``k`` hops, scoring each step
@@ -53,14 +53,14 @@ import pandas as pd
 from tqdm import tqdm
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from utils.classification_utils import (
+from utils.emx_classification_utils import (
     ALWAYS_INCLUDE_CLASSES,
+    CompanyMatcher,
     classify_few,
     cosine_similarity,
     driver,
     encoder,
     gds,
-    get_company_id,
 )
 
 basicConfig(level=INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -205,6 +205,17 @@ class PathState:
 # ---------------------------------------------------------------------------
 # Entry point and Personalized PageRank
 # ---------------------------------------------------------------------------
+
+
+_matcher: CompanyMatcher | None = None
+
+
+def _company_matcher() -> CompanyMatcher:
+    """Fallback matcher, built on first use (it loads and embeds every Organization)."""
+    global _matcher
+    if _matcher is None:
+        _matcher = CompanyMatcher(driver, encoder)
+    return _matcher
 
 
 def get_anchor_org_ids(company_name: str) -> list[int]:
@@ -460,7 +471,7 @@ def retrieve_evidence_beam_search(
     if org_ids:
         logger.info("Anchor resolved '%s' to %d Organization node(s).", company_name, len(org_ids))
     else:
-        company_id = get_company_id(company_name)
+        company_id = _company_matcher().get_company_id(company_name)
         if company_id is None:
             logger.warning("No match for company '%s'.", company_name)
             return [], None
@@ -525,7 +536,7 @@ def classify_claim(company: str, claim: str, config: RetrievalConfig) -> Dict[st
 
     similarities = json.dumps({str(e["node_id"]): e["similarity"] for e in evidence})
     try:
-        resp, context_str, _ = classify_few(evidence, company, claim)
+        resp, context_str, _, _ = classify_few(evidence, company, claim)
     except Exception as e:
         logger.error("Classification error for '%s': %s", claim, e)
         return _abstain(None, f"LLM call failed: {e}", similarities)

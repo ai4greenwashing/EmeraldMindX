@@ -1,6 +1,6 @@
 """Load emx_kgrag against an in-memory fake Neo4j, so tests need no database, GPU or LLM.
 
-``utils.classification_utils`` connects to Neo4j and loads Gemma at import time,
+``utils.emx_classification_utils`` connects to Neo4j and loads Gemma at import time,
 so it is replaced by a stub exposing the names emx_kgrag imports.
 """
 
@@ -121,6 +121,16 @@ class HashEncoder:
         return self._vec(text)
 
 
+class _ConstantMatcher:
+    """Stands in for CompanyMatcher: every company resolves to Organization 0."""
+
+    def __init__(self, driver, encoder):
+        pass
+
+    def get_company_id(self, name):
+        return 0
+
+
 def _cosine(a, b) -> float:
     return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)))
 
@@ -129,21 +139,21 @@ def _cosine(a, b) -> float:
 def kgrag():
     """Fresh emx_kgrag module bound to an empty FakeGraph; returns (module, graph, encoder)."""
     driver, encoder = FakeDriver(), HashEncoder()
-    stub = types.ModuleType("utils.classification_utils")
+    stub = types.ModuleType("utils.emx_classification_utils")
     stub.ALWAYS_INCLUDE_CLASSES = ["KPIObservation", "Penalty"]
     stub.classify_few = None
     stub.cosine_similarity = _cosine
     stub.driver = driver
     stub.encoder = encoder
     stub.gds = None
-    stub.get_company_id = lambda name: 0
+    stub.CompanyMatcher = _ConstantMatcher
     sys.modules["utils"] = types.ModuleType("utils")
-    sys.modules["utils.classification_utils"] = stub
+    sys.modules["utils.emx_classification_utils"] = stub
 
     spec = importlib.util.spec_from_file_location("emx_kgrag", MODULE_PATH)
     module = importlib.util.module_from_spec(spec)
     sys.modules["emx_kgrag"] = module
     spec.loader.exec_module(module)
     yield module, driver.graph, encoder
-    for name in ("emx_kgrag", "utils", "utils.classification_utils"):
+    for name in ("emx_kgrag", "utils", "utils.emx_classification_utils"):
         sys.modules.pop(name, None)
