@@ -1,14 +1,14 @@
 """EMX-SVOTING: confidence-weighted vote over a panel of LLM judges.
 
-Each judge reports a confidence for both EMX-KGRAG and EMX-RAG. Confidences are
-Each judge's pair is renormalized to sum to one, the pairs are summed per
+Each judge reports a confidence for both EMX-KGRAG and EMX-RAG. Each judge's
+pair is renormalized to sum to one, the pairs are summed per
 pipeline across the panel, and the higher cumulative score wins. Scores within
 TIE_TOLERANCE of each other, or a claim on which no judge produced a usable
 pair, yield an abstention.
 
 Example
 -------
-    python emx_svoting.py \
+    python emx-svoting.py \
         --data-dir path/to/pipeline_outputs \
         --dataset emerald_data:emerald_data_kgrag.csv:emerald_data_rag.csv \
         --panel-size 5 \
@@ -18,11 +18,12 @@ Example
 from __future__ import annotations
 
 import os
+import re
 from typing import Dict, List, Optional, Tuple
 
 import pandas as pd
 
-import emx_common as common
+import common_utils as common
 
 # --------------------------------------------------------------------------- #
 # Paths
@@ -91,7 +92,7 @@ Your confidence in each pipeline should reflect its aggregate quality across all
 - A value near 1.0 for one pipeline means you are highly confident it is the best under ILORA; values spread across pipelines indicate uncertainty between them.
 - "reason" must be no more than 50 words and should briefly reference the ILORA criteria that drove the confidence distribution.
 - Any output that is not a bare JSON object with valid confidences summing to 1.0 will be considered invalid.
-- No ties allowed - you must assign a higher confidence to one pipeline, even if the difference is small. You cannot assign 0 confidence to all pipelines; at least one must have a confidence greater than 0.
+
 
 ### Response:
 {{"conf_rag": <0.0-1.0>, "conf_graphrag": <0.0-1.0>, "reason": "<max 50 words>"}}"""
@@ -101,7 +102,13 @@ def parse_confidences(text: str) -> Tuple[Optional[float], Optional[float]]:
     """Return (conf_rag, conf_kgrag), or (None, None) if unusable."""
     payload = common.extract_json(text)
     if not payload:
-        return None, None
+        payload = {}
+        for key in ("conf_rag", "conf_graphrag"):
+            match = re.search(rf'"{key}"\s*:\s*([0-9]*\.?[0-9]+)', text or "")
+            if match:
+                payload[key] = match.group(1)
+        if not payload:
+            return None, None
 
     def as_float(value):
         try:

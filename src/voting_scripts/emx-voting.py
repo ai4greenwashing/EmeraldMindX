@@ -6,7 +6,7 @@ supplies the final label; an unresolved vote yields an abstention.
 
 Example
 -------
-    python emx_voting.py \
+    python emx-voting.py \
         --data-dir path/to/pipeline_outputs \
         --dataset emerald_data:emerald_data_kgrag.csv:emerald_data_rag.csv \
         --panel-size 5 \
@@ -21,7 +21,7 @@ from typing import Dict, List, Optional
 
 import pandas as pd
 
-import emx_common as common
+import common_utils as common
 
 # --------------------------------------------------------------------------- #
 # Paths
