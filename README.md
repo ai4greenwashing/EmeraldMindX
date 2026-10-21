@@ -24,7 +24,7 @@ Code, data and per-claim outputs for *EmeraldMindX: A Hybrid Framework for Green
 | Dataset | File | Claims (greenwashing / not) | Source | License |
 |---|---|---|---|---|
 | GreenClaims | `datasets/green_claims.csv` | 51 (24 / 27) | Subset of the GreenClaims dataset (Fornasiero, 2024, https://github.com/DizzyPanda1/GreenwashingDetectionDataset) with publicly available ESG reports | MIT |
-| EmeraldData | `datasets/emerald_data.csv` | 620 (225 / 395) | Semi-synthetic claims generated from ESG news articles (`claim_gen_scripts/`) | [TODO] |
+| EmeraldData | `datasets/emerald_data.csv` | 620 (225 / 395) | Semi-synthetic claims generated from ESG news articles (`claim_gen_scripts/`), introduced in EmeraldMind (Kaoukis et al., WWW 2026, https://github.com/ai4greenwashing/EmeraldMind) | Apache 2.0, as released with EmeraldMind |
 | EmeraldPromise | `datasets/emerald_promise.csv` | 558 (258 / 300) | Derived from the English part of ML-Promise (Seki et al., EMNLP 2025, http://MLpromise.nlpfin.com/) | CC BY-NC-SA 4.0, as ML-Promise |
 
 The evidence archives in `datasets/data/` cover the 37 ESG reports of the GreenClaims companies. The reports remain the property of the respective companies and are publicly available from their websites. The reports of the EmeraldPromise companies are not redistributed; their links are in the `source_url` column of `emerald_promise.csv`.
