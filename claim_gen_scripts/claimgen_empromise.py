@@ -20,62 +20,36 @@ CATEGORIES = ("environmental", "social", "governance", "n/a")
 LABELS = ("greenwashing", "not_greenwashing")
 
 
-GENERATION_PROMPT = """You are an ESG Claim Architect and Greenwashing Auditor.
+GENERATION_PROMPT = """
+You are an ESG Claim Architect and Greenwashing Auditor.
 
-Task: read the passage below from a corporate sustainability report and produce
-EXACTLY ONE claim that represents its most important finding, labelled according
-to how the passage itself frames that finding.
+Task: Analyze the provided text from an ESG report. For each core finding, generate one greenwashing and one not_greenwashing claims.
 
-### The passage is the ground truth
+PRIMARY DEFINITION: Greenwashing is defined as one of the following four types:
 
-Do not write a claim first and then choose a label. Judge whether the passage
-frames its finding honestly or misleadingly, then write the one claim that
-reflects that judgement.
+Type 1: Vague or Misleading Labels – Using terms like "eco-friendly," "green," or "conscious" without specific metrics or definitions.
+Type 2: Legal Obligations as Achievements – Presenting mandatory legal compliance (e.g., following a new EU plastic law) as a voluntary sustainability initiative.
+Type 3: Overgeneralization / Hidden Trade-offs – Claiming a whole product is "sustainable" based on one small part, or highlighting one green feature while ignoring a massive negative impact.
+Type 4: Unsupported Claims (No Proof) – Making environmental claims that lack evidence, third-party verification, or use data out of context to sound better.
 
-- Passage presents the finding with scope, baseline, verification or
-  acknowledged trade-offs -> NOT_GREENWASHING.
-- Passage itself exhibits one of the four misleading patterns below ->
-  GREENWASHING.
-- Passage supports both readings -> pick the better-fitting one.
+Not greenwashing claims are those that do not belong to any of the above categories.
+Always mention the company name in the claim text. Do not use pronouns like "we" or "our". Be specific and concise.
+Generate two claims per core finding: one that exemplifies greenwashing and one that exemplifies not_greenwashing. Do not generate more than two claims per core finding.
 
-Never invent a greenwashing claim from an honest passage, and never sanitise a
-misleading passage into a not_greenwashing claim.
+OUTPUT FORMAT:
+For each core finding, output two claims in the following format:
 
-### The four greenwashing patterns
-
-Type 1 - Vague or misleading labels: terms such as "eco-friendly", "green" or
-"sustainable" without specific metrics, scope or definitions.
-Type 2 - Legal obligations as achievements: mandatory compliance presented as a
-voluntary initiative.
-Type 3 - Overgeneralisation or hidden trade-offs: a whole product called
-sustainable on the strength of one component, or one green feature highlighted
-while a dominant negative impact goes unmentioned.
-Type 4 - Unsupported claims: environmental claims without evidence, third-party
-verification, or with data taken out of context.
-
-### Signals of honest disclosure
-
-Any of the following point towards not_greenwashing, because they show
-transparency rather than misleading framing: a disclosed scope, a named baseline
-year, the distribution behind an average, an explicit timeframe, a named
-third-party programme or certification, or openly acknowledged limitations.
-
-### Style
-
-Name the subject explicitly; do not use "we" or "our". Be specific and concise.
-
-### Output format
-
-Emit exactly one block, and nothing else:
-
-Claim: [one claim reflecting the passage's most important finding]
+Claim 1: [The claim text here]
 Label: [greenwashing or not_greenwashing]
-Justification: [why this label is correct, pointing to specific wording in the
-passage. For greenwashing, name the Type. For not_greenwashing, name the
-disclosure signals the passage provides.]
+Justification: [A brief explanation of why this claim is categorized as greenwashing or not_greenwashing.]
 Category: [Environmental, Social, Governance, or N/A]
 
-Passage:
+Claim 2: [The claim text here]
+Label: [greenwashing or not_greenwashing]
+Justification: [A brief explanation of why this claim is categorized as greenwashing or not_greenwashing.]
+Category: [Environmental, Social, Governance, or N/A]
+
+Text to analyze:
 
 """
 
@@ -89,17 +63,19 @@ CLAIM_PATTERN = re.compile(
 )
 
 
-def parse_claim(text: str) -> Optional[Dict[str, str]]:
-    match = CLAIM_PATTERN.search(text or "")
-    if not match:
-        return None
-    category = match.group(4).strip().lower()
-    return {
-        "claim": match.group(1).strip(),
-        "gold_label": match.group(2).strip().lower(),
-        "justification": match.group(3).strip(),
-        "category": category if category in CATEGORIES else "n/a",
-    }
+def parse_claims(text: str) -> List[Dict[str, str]]:
+    claims = []
+    for match in CLAIM_PATTERN.finditer(text or ""):
+        category = match.group(4).strip().lower()
+        claims.append(
+            {
+                "claim": match.group(1).strip(),
+                "gold_label": match.group(2).strip().lower(),
+                "justification": match.group(3).strip(),
+                "category": category if category in CATEGORIES else "n/a",
+            }
+        )
+    return claims
 
 
 def company_and_year(record: dict) -> Dict[str, str]:
@@ -236,19 +212,20 @@ def main() -> None:
 
     rows, unparsed = [], 0
     for record, completion in zip(records, completions):
-        parsed = parse_claim(completion)
-        if parsed is None:
+        parsed = parse_claims(completion)
+        if not parsed:
             unparsed += 1
             continue
-        rows.append(
-            {
-                **parsed,
-                **company_and_year(record),
-                "original_text": record["data"],
-                "source_url": record.get("URL", ""),
-                **{key: record.get(key, "") for key in carry},
-            }
-        )
+        for claim in parsed:
+            rows.append(
+                {
+                    **claim,
+                    **company_and_year(record),
+                    "original_text": record["data"],
+                    "source_url": record.get("URL", ""),
+                    **{key: record.get(key, "") for key in carry},
+                }
+            )
 
     if not rows:
         print("No parseable claims were generated.")
