@@ -25,7 +25,7 @@ Code, data and per-claim outputs for *EmeraldMindX: A Hybrid Framework for Green
 |---|---|---|---|---|
 | GreenClaims | `datasets/green_claims.csv` | 51 (24 / 27) | Subset of the GreenClaims dataset (Fornasiero, 2024, https://github.com/DizzyPanda1/GreenwashingDetectionDataset) with publicly available ESG reports | MIT |
 | EmeraldData | `datasets/emerald_data.csv` | 620 (225 / 395) | Semi-synthetic claims generated from ESG news articles (`claim_gen_scripts/`), introduced in EmeraldMind (Kaoukis et al., WWW 2026, https://github.com/ai4greenwashing/EmeraldMind) | Apache 2.0, as released with EmeraldMind |
-| EmeraldPromise | `datasets/emerald_promise.csv` | 558 (258 / 300) | Derived from the English part of ML-Promise (Seki et al., EMNLP 2025, http://MLpromise.nlpfin.com/) | CC BY-NC-SA 4.0, as ML-Promise |
+| EmeraldPromise | `datasets/emerald_promise.csv` | 558 (258 / 300) | Derived from the English part of ML-Promise (Seki et al., EMNLP 2025, http://MLpromise.nlpfin.com/). Only claims categorised as Environmental by the generator are kept (`claim_gen_scripts/claimgen_empromise.py`) | CC BY-NC-SA 4.0, as ML-Promise |
 
 The evidence archives in `datasets/data/` cover the 37 ESG reports of the GreenClaims companies. The reports remain the property of the respective companies and are publicly available from their websites. The reports of the EmeraldPromise companies are not redistributed. Their links are in the `source_url` column of `emerald_promise.csv`.
 
@@ -40,6 +40,8 @@ The evidence archives in `datasets/data/` cover the 37 ESG reports of the GreenC
 | Embeddings | `sentence-transformers/all-mpnet-base-v2` (EmeraldDBX), `multi-qa-MiniLM-L6-cos-v1` (claim nodes), `sentence-transformers/all-MiniLM-L6-v2` (KPI extraction) |
 | Voting judges | `prometheus-eval/prometheus-7b-v2.0`, `Qwen/Qwen2.5-7B-Instruct`, `microsoft/Phi-4-mini-instruct`, `mistralai/Mistral-7B-Instruct-v0.3`, `google/gemma-3-4b-it`, `deepseek-ai/deepseek-llm-7b-chat`, `ibm-granite/granite-4.1-8b`; single large judge `google/gemma-3-27b-it` |
 | ILORA evaluator | `prometheus-eval/prometheus-13b-v1.0` |
+| EmeraldData claim generation (`claimgen.py`) | `gemini-2.5-flash` (Google API). The fallback models in the script were not used for the released claims |
+| EmeraldPromise claim generation (`claimgen_empromise.py`) | `Qwen/Qwen2.5-14B-Instruct` |
 
 Open models are loaded from Hugging Face. Their licenses are given on the respective model cards. The panel compositions are defined in `src/voting_scripts/common_utils.py`. The Gemini API does not allow pinning a fixed model snapshot, and the Ollama tag `gemma3:latest` may point to a newer model version, so the graph-construction steps may not be exactly reproducible.
 
