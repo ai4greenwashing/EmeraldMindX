@@ -16,6 +16,7 @@ import numpy as np
 import pytest
 
 MODULE_PATH = Path(__file__).resolve().parents[1] / "src" / "EmeraldKG" / "emx_kgrag.py"
+BFS_MODULE_PATH = MODULE_PATH.with_name("emx_anchor_bfs.py")
 
 
 class FakeGraph:
@@ -147,6 +148,8 @@ def kgrag():
     stub.encoder = encoder
     stub.gds = None
     stub.CompanyMatcher = _ConstantMatcher
+    stub.retrieve_evidence = None
+    stub.retrieve_evidence_with_paths = None
     sys.modules["utils"] = types.ModuleType("utils")
     sys.modules["utils.emx_classification_utils"] = stub
 
@@ -157,3 +160,15 @@ def kgrag():
     yield module, driver.graph, encoder
     for name in ("emx_kgrag", "utils", "utils.emx_classification_utils"):
         sys.modules.pop(name, None)
+
+
+@pytest.fixture
+def anchor_bfs(kgrag):
+    """emx_anchor_bfs bound to the same fakes as ``kgrag``; returns (module, kgrag module, graph)."""
+    kgrag_module, graph, _ = kgrag
+    spec = importlib.util.spec_from_file_location("emx_anchor_bfs", BFS_MODULE_PATH)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["emx_anchor_bfs"] = module
+    spec.loader.exec_module(module)
+    yield module, kgrag_module, graph
+    sys.modules.pop("emx_anchor_bfs", None)

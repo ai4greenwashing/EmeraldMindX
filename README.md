@@ -10,13 +10,13 @@ Code, data and per-claim outputs for *EmeraldMindX: A Hybrid Framework for Green
 | `datasets/data/` | Evidence of the GreenClaims reports: page-level text (`text.tar.gz`), extracted KPIs (`kpis.tar.gz`) and image descriptions (`image_desc.tar.gz`) |
 | `schemas/`, `kpi_definitions.json` | Knowledge-graph schema and KPI definitions used to build EmeraldGraphX |
 | `graph_latest.json` | EmeraldGraphX as an edge list |
-| `src/EmeraldKG/` | Construction of EmeraldGraphX (steps `0`–`6b`), classification with the EmeraldMind graph retrieval (`7-classify.py`) and EMX-KGRAG with guided beam search (`emx_kgrag.py`) |
+| `src/EmeraldKG/` | Construction of EmeraldGraphX (steps `0`–`6b`), classification with the EmeraldMind graph retrieval (`7-classify.py`) EMX-KGRAG with guided beam search (`emx_kgrag.py`) and the EMX-Anchor-BFS comparator (`emx_anchor_bfs.py`) |
 | `src/EmeraldDB/` | Construction of EmeraldDBX (`vectordb.py`) and EMX-RAG (`emx_rag.py`) |
 | `src/baseline.py` | Baseline (LLM without retrieval) |
 | `src/voting_scripts/` | EMX-VOTING (`emx-voting.py`) and EMX-SVOTING (`emx-svoting.py`) |
 | `llm_judge_scripts/` | ILORA scoring of the justifications (`pipeline_ranking.py`) and radar charts (`ilora_eval.py`) |
 | `claim_gen_scripts/` | Generation of the EmeraldData and EmeraldPromise claims |
-| `tests/` | Unit tests of the guided beam search (`pytest tests/`, no database or GPU needed) |
+| `tests/` | Unit tests of the guided beam search and the EMX-Anchor-BFS retrieval (`pytest tests/`, no database or GPU needed) |
 | `results/` | Per-claim outputs (see below) |
 
 ## Datasets
