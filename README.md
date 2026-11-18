@@ -67,6 +67,7 @@ Scripts with command-line options list them with `--help`. The others are config
 | `results/base_predictions.csv` | Gold label and the EMX-RAG and EMX-KGRAG labels for every claim |
 | `results/voting_results/` | EMX-VOTING and EMX-SVOTING for panels of 1, 3, 5 and 7 judges: votes or summed confidences, selected pipeline and final label per claim. The file `abstention_summary.csv` gives overall accuracy and abstentions |
 | `results/pip_ranking/` | ILORA scores of every justification (Fig. 8) |
+| `results/expert_review/` | Anonymized responses of the expert review (Section S3 of the supplementary material): label validation and justification quality review, one row per judgement, with the gold labels and the pipeline behind each anonymized justification |
 
 These files contain the per-claim outputs behind the EmeraldMindX results of the paper.
 
